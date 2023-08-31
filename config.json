@@ -1,0 +1,44 @@
+{
+    "scan_types": {
+        "oneforall": {
+            "path_suffix": "/oneforall.py",
+            "args": ["python"],
+            "update_args": []
+        },
+        "fscan": {
+            "path_suffix": "/fscan.exe",
+            "args": [],
+            "update_args": ["-hf", "-o", "-uf"]
+        },
+        "xray": {
+            "path_suffix": "/xray.exe",
+            "args": [],
+            "update_args": ["--uf", "--url-file", "--json-output", "--html-output", "--webhook-output"]
+        },
+        "xpoc": {
+            "path_suffix": "/xpoc.exe",
+            "args": [],
+            "update_args": []
+        },
+        "vulmap": {
+            "path_suffix": "/vulmap.py",
+            "args": ["python"],
+            "update_args": []
+        },
+        "fofa": {
+            "path_suffix": "/fofa-api.py",
+            "args": ["python"],
+            "update_args": []
+        },
+        "enscan": {
+            "path_suffix": "/enscan.exe",
+            "args": [],
+            "update_args": ["-o", "-f", "-is-merge", "-is-pid", "-json"]
+        },
+        "afrog": {
+            "path_suffix": "/afrog.exe",
+            "args": [],
+            "update_args": ["-o", "-j", "-ja", "-T"]
+        }
+    }
+}

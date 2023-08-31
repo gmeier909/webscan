@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GScan武器库</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.socket.io/socket.io-3.0.5.js"></script>
+    <style>
+        * {
+            list-style: none;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        
+        .navbar {
+            background-color: #343a40;
+        }
+        
+        .navbar-brand {
+            font-size: 24px;
+        }
+        
+        .nav-link {
+            color: #ffffff;
+        }
+        
+        .nav-link:hover {
+            color: #f5f5f5;
+        }
+        
+        .tab-content {
+            background-color: #1a1a1a;
+            border: 1px solid #343a40;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        
+        .nav-tabs .nav-link {
+            color: #f5f5f5;
+            border: 1px solid #343a40;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: #343a40;
+            color: #f5f5f5;
+            border-color: transparent;
+        }
+        
+        .form-control {
+            background-color: #343a40;
+            color: #f5f5f5;
+            border: 1px solid #343a40;
+            border-radius: 5px;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        
+        .list-group {
+            background-color: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border: 1px solid #343a40;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .table td, .table th {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">GScan武器库</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Menu 1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Menu 2</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">GScan武器库</h1>
+        </div>
+
+        <div class="container">
+            <ul class="nav nav-tabs" id="tabNav" role="tablist">
+                <!-- 综合扫描 -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="AllTab" data-bs-toggle="tab" data-bs-target="#AllcommandPanel" type="button" role="tab" aria-controls="AllcommandPanel" aria-selected="true">综合扫描</button>
+                </li>
+                <!-- 文件管理 -->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="FscanTab" data-bs-toggle="tab" data-bs-target="#FscancommandPanel" type="button" role="tab" aria-controls="FscancommandPanel" aria-selected="false">文件管理</button>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-3">
+                <!-- 综合扫描 -->
+                <div class="tab-pane fade show active" id="AllcommandPanel" role="tabpanel" aria-labelledby="AllTab">
+                    <input type="text" id="AllcommandInput" class="form-control mb-2" placeholder="all -h">
+                    <button class="btn btn-primary" onclick="sendCommand('all')">发送</button>
+                    <div>
+                        <ul id="AlloutputList" class="list-group">
+<pre>
+使用说明：
+oneforall：是一款子域名扫描工具，结合各种api平台。
+oneforall --target www.example.com run
+
+fscan：内网扫描工具，也可用于外网打点。
+fscan -h
+fscan -hf example.com_ip.txt -o 123.txt -no -nobr -nopoc
+
+xray：漏洞扫描工具。
+xray -h
+xray webscan -h
+xray ws --uf example.com_url.txt
+
+xpoc：漏洞扫描工具
+xpoc -h
+xpoc -i example.com_url.txt -o 1.txt
+
+vulmap：漏洞扫描工具，可以执行exp。
+vulmap -h
+vulmap -u http://example.com
+vulmap -u http://example.com -a struts2
+vulmap -u http://example.com:7001 -v CVE-2019-2729
+vulmap -f example.com_url.txt
+
+fofa：fofa信息收集，123是结果的文件名，不用加.txt
+fofa 123 {'rule':'domain="baidu.com"','page':'','size':'','fields':'host','is_full':''}
+
+enscan：资产信息收集
+enscan：https://github.com/wgpsec/ENScan_GO
+enscan -h
+enscan -n 小米
+enscan -n 小米 -o 123
+
+afrog：综合漏洞扫描
+afrog：https://github.com/zan8in/afrog
+afrog -h
+</pre>
+                        </ul>
+                    </div>
+                </div>
+                <!-- 文件管理 -->
+                <div class="tab-pane fade" id="FscancommandPanel" role="tabpanel" aria-labelledby="FscanTab">
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <input class="form-control form-control-sm" id="formFileSm" type="file" name="file">
+                            <input class="btn btn-primary mt-1" type="submit" value="上传">
+                        </div>
+                    </form>
+                    
+                    <div class="table-responsive mt-3">
+                        <table class="table table-striped table-dark">
+                            <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for file in files %}
+                                <tr>
+                                    <td>{{ file.replace('results\\', '') }}</td>
+                                    <td>
+                                        <a href="/view/{{ file.replace('results\\', '') }}" class="btn btn-primary">View</a>
+                                        <a href="/delete/{{ file.replace('results\\', '') }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this file?')">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById("AllcommandInput").addEventListener("keyup", function(event) {
+        // 使用 event.keyCode 或 event.which 来检测回车键
+        if (event.keyCode === 13 || event.which === 13) {
+            // 阻止默认的回车提交行为
+            event.preventDefault();
+            // 触发按钮点击事件
+            document.querySelector(".btn-primary").click();
+        }
+    });
+    var socket = io();
+
+    socket.on('connect', function() {
+        console.log('Connected to server');
+    });
+
+    function sendCommand(tab) {
+        var commandInput;
+        var outputList;
+
+        if (tab === 'all') {
+            commandInput = document.getElementById('AllcommandInput');
+            outputList = document.getElementById('AlloutputList');
+        } else if (tab === 'fscan') {
+            commandInput = document.getElementById('FscancommandInput');
+            outputList = document.getElementById('FscanoutputList');
+        }
+        outputList.innerText = "";
+
+        var command = commandInput.value;
+
+        socket.emit('command', command);
+
+        commandInput.value = '';
+    }
+
+    socket.on('output', function(data) {
+        var outputList = document.getElementById('AlloutputList');
+        var li = document.createElement('li');
+        li.textContent = data;
+        outputList.appendChild(li);
+    });
+
+    function getResult(tab) {
+        var outputList;
+
+        if (tab === 'all') {
+            outputList = document.getElementById('AlloutputList');
+        } else if (tab === 'fscan') {
+            outputList = document.getElementById('FscanoutputList');
+        }
+
+        socket.emit('get_result');
+
+        socket.on('output', function(data) {
+            console.log(data);
+            var li = document.createElement('li');
+            li.textContent = data;
+            outputList.appendChild(li);
+        });
+    }
+</script>
+</body>
+</html>
