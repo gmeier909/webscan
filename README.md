@@ -22,6 +22,10 @@
 
 1. 所有工具使用方式跟原本工具一模一样，如不知如何使用，请在github搜索对应工具名称。
 2. 文件都默认存放在/results下
+3. oneforall --target www.example.com run
+4. fscan -hf example.com_ip.txt -o 扫描结果.txt -nobr
+5. 输出结果都会适配存放在/results目录，扫描文件不需要设置目录，默认在/results下。
+6. 大量域名的话可以在文件管理页面上传txt文件进行扫描。
 
 
 
